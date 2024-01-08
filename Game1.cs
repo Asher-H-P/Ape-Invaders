@@ -99,16 +99,16 @@ namespace Ape_Invaders
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
             _spriteBatch.Draw(A, new Vector2(300, 100), Color.White);
-            _spriteBatch.Draw(P, new Vector2(350, 100), Color.White);
-            _spriteBatch.Draw(E, new Vector2(400, 100), Color.White);
+            _spriteBatch.Draw(P, new Vector2(360, 100), Color.White);
+            _spriteBatch.Draw(E, new Vector2(420, 100), Color.White);
             _spriteBatch.Draw(I, new Vector2(200, 200), Color.White);
-            _spriteBatch.Draw(N, new Vector2(250, 200), Color.White);
-            _spriteBatch.Draw(V, new Vector2(300, 200), Color.White);
-            _spriteBatch.Draw(A, new Vector2(350, 200), Color.White);
-            _spriteBatch.Draw(D, new Vector2(400, 200), Color.White);
-            _spriteBatch.Draw(E, new Vector2(450, 200), Color.White);
-            _spriteBatch.Draw(R, new Vector2(500, 200), Color.White);
-            _spriteBatch.Draw(S, new Vector2(550, 200), Color.White);
+            _spriteBatch.Draw(N, new Vector2(260, 200), Color.White);
+            _spriteBatch.Draw(V, new Vector2(320, 200), Color.White);
+            _spriteBatch.Draw(A, new Vector2(380, 200), Color.White);
+            _spriteBatch.Draw(D, new Vector2(440, 200), Color.White);
+            _spriteBatch.Draw(E, new Vector2(500, 200), Color.White);
+            _spriteBatch.Draw(R, new Vector2(560, 200), Color.White);
+            _spriteBatch.Draw(S, new Vector2(620, 200), Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
