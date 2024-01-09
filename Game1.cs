@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,6 +7,14 @@ namespace Ape_Invaders
 {
     public class Game1 : Game
     {
+        enum Screen
+        {
+            Intro,
+            Story,
+            Game,
+            Losing,
+            Score
+        }
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Texture2D A;
@@ -34,6 +43,22 @@ namespace Ape_Invaders
         Texture2D X;
         Texture2D Y;
         Texture2D Z;
+        Texture2D start2;
+        Texture2D score2;
+        Texture2D story2;
+        Rectangle play;
+        Rectangle story;
+        Rectangle score;
+        Rectangle spkintro;
+        Rectangle apeintro1;
+        Rectangle apeintro2;
+        Rectangle apeintro3;
+        SoundEffect intromsc;
+        Screen screen;
+        MouseState mouseState;
+        int msc1 = 0;
+        int msc2 = 0;
+        int msc3 = 0;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -46,6 +71,13 @@ namespace Ape_Invaders
             // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 1000;
             _graphics.PreferredBackBufferHeight = 600;
+            play = new Rectangle(440, 400, 120, 40);
+            story = new Rectangle(440, 460, 120, 40);
+            score = new Rectangle(440, 520, 120, 40);
+            spkintro = new Rectangle(100, 30, 333, 300);
+            apeintro1 = new Rectangle(600, 30, 333, 333);
+            apeintro2 = new Rectangle(650, 30, 200, 333);
+            apeintro3 = new Rectangle(700, 30, 300, 333);
             _graphics.ApplyChanges();
             base.Initialize();
         }
@@ -79,6 +111,10 @@ namespace Ape_Invaders
             X = Content.Load<Texture2D>("AE-X");
             Y = Content.Load<Texture2D>("AE-Y");
             Z = Content.Load<Texture2D>("AE-Z");
+            start2 = Content.Load<Texture2D>("start");
+            score2 = Content.Load<Texture2D>("score");
+            story2 = Content.Load<Texture2D>("story");
+            intromsc = Content.Load<SoundEffect>("titlescreen");
             // TODO: use this.Content to load your game content here
         }
 
@@ -86,7 +122,7 @@ namespace Ape_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            mouseState = Mouse.GetState();
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -98,17 +134,33 @@ namespace Ape_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _spriteBatch.Draw(A, new Vector2(300, 100), Color.White);
-            _spriteBatch.Draw(P, new Vector2(360, 100), Color.White);
-            _spriteBatch.Draw(E, new Vector2(420, 100), Color.White);
-            _spriteBatch.Draw(I, new Vector2(200, 200), Color.White);
-            _spriteBatch.Draw(N, new Vector2(260, 200), Color.White);
-            _spriteBatch.Draw(V, new Vector2(320, 200), Color.White);
-            _spriteBatch.Draw(A, new Vector2(380, 200), Color.White);
-            _spriteBatch.Draw(D, new Vector2(440, 200), Color.White);
-            _spriteBatch.Draw(E, new Vector2(500, 200), Color.White);
-            _spriteBatch.Draw(R, new Vector2(560, 200), Color.White);
-            _spriteBatch.Draw(S, new Vector2(620, 200), Color.White);
+            if (screen == Screen.Intro)
+            {
+                if (msc1 == 0)
+                {
+                    intromsc.Play();
+                    msc1 = 1;
+                }
+                _spriteBatch.Draw(A, new Vector2(400, 80), Color.White);
+                _spriteBatch.Draw(P, new Vector2(453, 80), Color.White);
+                _spriteBatch.Draw(E, new Vector2(515, 80), Color.White);
+                _spriteBatch.Draw(I, new Vector2(246, 180), Color.White);
+                _spriteBatch.Draw(N, new Vector2(306, 180), Color.White);
+                _spriteBatch.Draw(V, new Vector2(366, 180), Color.White);
+                _spriteBatch.Draw(A, new Vector2(426, 180), Color.White);
+                _spriteBatch.Draw(D, new Vector2(486, 180), Color.White);
+                _spriteBatch.Draw(E, new Vector2(546, 180), Color.White);
+                _spriteBatch.Draw(R, new Vector2(606, 180), Color.White);
+                _spriteBatch.Draw(S, new Vector2(666, 180), Color.White);
+                _spriteBatch.Draw(start2, play, Color.White);
+                _spriteBatch.Draw(story2, story, Color.White);
+                _spriteBatch.Draw(score2, score, Color.White);
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    intromsc.Dispose();
+                    screen = Screen.Game;
+                }
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);

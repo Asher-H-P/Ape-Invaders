@@ -12,6 +12,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\102 title screen.mp3" />
     <None Remove="Content\AE-A.png" />
     <None Remove="Content\AE-B.png" />
     <None Remove="Content\AE-C.png" />
