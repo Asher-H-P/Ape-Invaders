@@ -46,6 +46,10 @@ namespace Ape_Invaders
         Texture2D start2;
         Texture2D score2;
         Texture2D story2;
+        Texture2D spikeintro;
+        Texture2D ape1;
+        Texture2D ape2;
+        Texture2D ape3;
         Rectangle play;
         Rectangle story;
         Rectangle score;
@@ -53,12 +57,17 @@ namespace Ape_Invaders
         Rectangle apeintro1;
         Rectangle apeintro2;
         Rectangle apeintro3;
+        Rectangle select1;
+        Rectangle select2;
+        Rectangle select3;
         SoundEffect intromsc;
         Screen screen;
-        MouseState mouseState;
+        MouseState click;
+        KeyboardState clack;
         int msc1 = 0;
         int msc2 = 0;
         int msc3 = 0;
+        int select = 1;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -74,10 +83,13 @@ namespace Ape_Invaders
             play = new Rectangle(440, 400, 120, 40);
             story = new Rectangle(440, 460, 120, 40);
             score = new Rectangle(440, 520, 120, 40);
-            spkintro = new Rectangle(100, 30, 333, 300);
-            apeintro1 = new Rectangle(600, 30, 333, 333);
-            apeintro2 = new Rectangle(650, 30, 200, 333);
-            apeintro3 = new Rectangle(700, 30, 300, 333);
+            select1 = new Rectangle(400, 400, 120, 40);
+            select2 = new Rectangle(400, 460, 120, 40);
+            select3 = new Rectangle(400, 520, 120, 40);
+            spkintro = new Rectangle(80, 10, 222, 285);
+            apeintro1 = new Rectangle(600, 30, 150, 150);
+            apeintro2 = new Rectangle(735, 30, 132, 222);
+            apeintro3 = new Rectangle(825, 30, 230, 252);
             _graphics.ApplyChanges();
             base.Initialize();
         }
@@ -114,6 +126,10 @@ namespace Ape_Invaders
             start2 = Content.Load<Texture2D>("start");
             score2 = Content.Load<Texture2D>("score");
             story2 = Content.Load<Texture2D>("story");
+            spikeintro = Content.Load<Texture2D>("spike_intro");
+            ape1 = Content.Load<Texture2D>("ape_intro1");
+            ape2 = Content.Load<Texture2D>("ape_intro2");
+            ape3 = Content.Load<Texture2D>("ape_intro3");
             intromsc = Content.Load<SoundEffect>("titlescreen");
             // TODO: use this.Content to load your game content here
         }
@@ -122,9 +138,47 @@ namespace Ape_Invaders
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            mouseState = Mouse.GetState();
+            click = Mouse.GetState();
+            clack = Keyboard.GetState();
             // TODO: Add your update logic here
-
+            if (screen == Screen.Game || screen == Screen.Story || screen == Screen.Score)
+            {
+                intromsc.Dispose();
+            }
+            if (clack.IsKeyDown(Keys.Down) && select < 3)
+            {
+                select = select + 1;
+            }
+            if (clack.IsKeyDown(Keys.Up) && select > 1)
+            {
+                select = select - 1;
+            }
+            if (select == 1 && clack.IsKeyDown(Keys.E))
+            {
+                screen = Screen.Game;
+            }
+            else if (select == 2 && clack.IsKeyDown(Keys.E))
+            {
+                screen = Screen.Story;
+            }
+            else if (select == 3 && clack.IsKeyDown(Keys.E))
+            {
+                screen = Screen.Score;
+            }
+            if (screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
+            {
+                screen = Screen.Score;
+            }
+            if (screen == Screen.Story && clack.IsKeyDown(Keys.Q))
+            {
+                msc1 = 0;
+                screen = Screen.Intro;
+            }
+            if (screen == Screen.Score && clack.IsKeyDown(Keys.Q))
+            {
+                msc1 = 0;
+                screen = Screen.Intro;
+            }
             base.Update(gameTime);
         }
 
@@ -152,13 +206,40 @@ namespace Ape_Invaders
                 _spriteBatch.Draw(E, new Vector2(546, 180), Color.White);
                 _spriteBatch.Draw(R, new Vector2(606, 180), Color.White);
                 _spriteBatch.Draw(S, new Vector2(666, 180), Color.White);
-                _spriteBatch.Draw(start2, play, Color.White);
-                _spriteBatch.Draw(story2, story, Color.White);
-                _spriteBatch.Draw(score2, score, Color.White);
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                _spriteBatch.Draw(spikeintro, spkintro, Color.White);
+                _spriteBatch.Draw(ape1, apeintro1, Color.White);
+                _spriteBatch.Draw(ape2, apeintro2, Color.White);
+                _spriteBatch.Draw(ape3, apeintro3, Color.White);
+                if (select == 1)
+                {
+                    _spriteBatch.Draw(start2, play, Color.DarkGray);
+                }
+                else if (select != 1)
+                {
+
+                    _spriteBatch.Draw(start2, play, Color.White);
+                }
+                if (select == 2)
+                {
+                    _spriteBatch.Draw(story2, story, Color.DarkGray);
+                }
+                else if (select != 2)
+                {
+
+                    _spriteBatch.Draw(story2, story, Color.White);
+                }
+                if (select == 3)
+                {
+                    _spriteBatch.Draw(score2, score, Color.DarkGray);
+                }
+                else if (select != 3)
+                {
+
+                    _spriteBatch.Draw(score2, score, Color.White);
+                }
+                if (screen == Screen.Game || screen == Screen.Story || screen == Screen.Score)
                 {
                     intromsc.Dispose();
-                    screen = Screen.Game;
                 }
             }
             _spriteBatch.End();

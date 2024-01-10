@@ -373,6 +373,12 @@
 /processorParam:TextureFormat=Color
 /build:score.png
 
+#begin scoremsc.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:scoremsc.wav
+
 #begin spike_intro.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -408,6 +414,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:story.png
+
+#begin storymsc.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:storymsc.wav
 
 #begin titlescreen.wav
 /importer:WavImporter
