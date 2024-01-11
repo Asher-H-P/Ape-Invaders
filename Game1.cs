@@ -61,12 +61,17 @@ namespace Ape_Invaders
         Rectangle select2;
         Rectangle select3;
         SoundEffect intromsc;
+        SoundEffect scoremsc;
+        SoundEffect storymsc;
+        SoundEffect gamemsc;
         Screen screen;
         MouseState click;
         KeyboardState clack;
+        private SpriteFont storytext;
         int msc1 = 0;
         int msc2 = 0;
         int msc3 = 0;
+        int msc4 = 0;
         int select = 1;
         public Game1()
         {
@@ -131,6 +136,10 @@ namespace Ape_Invaders
             ape2 = Content.Load<Texture2D>("ape_intro2");
             ape3 = Content.Load<Texture2D>("ape_intro3");
             intromsc = Content.Load<SoundEffect>("titlescreen");
+            scoremsc = Content.Load<SoundEffect>("scoremsc");
+            storymsc = Content.Load<SoundEffect>("storymsc");
+            gamemsc = Content.Load<SoundEffect>("storymsc");
+            storytext = Content.Load<SpriteFont>("text1");
             // TODO: use this.Content to load your game content here
         }
 
@@ -141,11 +150,23 @@ namespace Ape_Invaders
             click = Mouse.GetState();
             clack = Keyboard.GetState();
             // TODO: Add your update logic here
-            if (screen == Screen.Game || screen == Screen.Story || screen == Screen.Score)
+            if (screen != Screen.Intro)
             {
                 intromsc.Dispose();
             }
-            if (clack.IsKeyDown(Keys.Down) && select < 3)
+            if (screen != Screen.Game)
+            {
+                gamemsc.Dispose();
+            }
+            if (screen != Screen.Story)
+            {
+                storymsc.Dispose();
+            }
+            if (screen != Screen.Score)
+            {
+                scoremsc.Dispose();
+            }
+            if (clack.IsKeyDown(Keys.Down) && select < 30)
             {
                 select = select + 1;
             }
@@ -153,32 +174,56 @@ namespace Ape_Invaders
             {
                 select = select - 1;
             }
-            if (select == 1 && clack.IsKeyDown(Keys.E))
+            if (select >= 1 && select <= 10 && clack.IsKeyDown(Keys.E))
             {
+
                 screen = Screen.Game;
             }
-            else if (select == 2 && clack.IsKeyDown(Keys.E))
+            //music
+            else if (select >= 11 && select <= 20 && clack.IsKeyDown(Keys.E))
             {
-                screen = Screen.Story;
+                if (msc2 == 0)
+                {
+                    screen = Screen.Story;
+                    storymsc.Play();
+                    msc2 = 1;
+                }
             }
-            else if (select == 3 && clack.IsKeyDown(Keys.E))
+            else if (select >= 21 && select <= 30 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
             {
-                screen = Screen.Score;
-            }
-            if (screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
-            {
-                screen = Screen.Score;
+                if (msc3 == 0)
+                {
+                    screen = Screen.Score;
+                    scoremsc.Play();
+                    msc3 = 1;
+                }
             }
             if (screen == Screen.Story && clack.IsKeyDown(Keys.Q))
             {
-                msc1 = 0;
-                screen = Screen.Intro;
+                if (msc2 == 1)
+                {
+                    msc1 = 0;
+                    screen = Screen.Intro;
+                    storymsc.Dispose();
+                    msc2 = 0;
+                }
             }
-            if (screen == Screen.Score && clack.IsKeyDown(Keys.Q))
+            else if (screen == Screen.Score && clack.IsKeyDown(Keys.Q))
             {
-                msc1 = 0;
-                screen = Screen.Intro;
+                if (msc3 == 1)
+                {
+                    msc1 = 0;
+                    screen = Screen.Intro;
+                    scoremsc.Dispose();
+                    msc3 = 0;
+                }
             }
+            else if (screen == Screen.Intro)
+            {
+                msc2 = 0;
+                msc3 = 0;
+            }
+            //music
             base.Update(gameTime);
         }
 
@@ -192,6 +237,9 @@ namespace Ape_Invaders
             {
                 if (msc1 == 0)
                 {
+                    scoremsc.Dispose();
+                    storymsc.Dispose();
+                    gamemsc.Dispose();
                     intromsc.Play();
                     msc1 = 1;
                 }
@@ -210,36 +258,58 @@ namespace Ape_Invaders
                 _spriteBatch.Draw(ape1, apeintro1, Color.White);
                 _spriteBatch.Draw(ape2, apeintro2, Color.White);
                 _spriteBatch.Draw(ape3, apeintro3, Color.White);
-                if (select == 1)
+                if (select >= 1 && select <= 10)
                 {
                     _spriteBatch.Draw(start2, play, Color.DarkGray);
                 }
-                else if (select != 1)
+                else if (select > 10)
                 {
 
                     _spriteBatch.Draw(start2, play, Color.White);
                 }
-                if (select == 2)
+                if (select >= 11 && select <= 20)
                 {
                     _spriteBatch.Draw(story2, story, Color.DarkGray);
                 }
-                else if (select != 2)
+                else if (select < 11 || select > 20)
                 {
 
                     _spriteBatch.Draw(story2, story, Color.White);
                 }
-                if (select == 3)
+                if (select >= 21 && select <= 30)
                 {
                     _spriteBatch.Draw(score2, score, Color.DarkGray);
                 }
-                else if (select != 3)
+                else if (select < 21)
                 {
 
                     _spriteBatch.Draw(score2, score, Color.White);
                 }
-                if (screen == Screen.Game || screen == Screen.Story || screen == Screen.Score)
+                if (screen == Screen.Game)
                 {
                     intromsc.Dispose();
+                }
+                if (screen == Screen.Story)
+                {
+                    intromsc.Dispose();
+                    if (msc2 == 0)
+                    {
+                        storymsc.Play();
+                        msc2 = 1;
+                        msc1 = 0;
+                    }
+                    _spriteBatch.DrawString(storytext, "Apes have are travelling through time in order to rewrite history.", new Vector2(100, 100), Color.White);
+                    _spriteBatch.DrawString(storytext, "It's up to you to stop them. Use your slingshot to stop them.", new Vector2(100, 125), Color.White);
+                }
+                if (screen == Screen.Score)
+                {
+                    intromsc.Dispose();
+                    if (msc3 == 0)
+                    {
+                        scoremsc.Play();
+                        msc3 = 1;
+                        msc1 = 0;
+                    }
                 }
             }
             _spriteBatch.End();

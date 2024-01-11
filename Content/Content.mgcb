@@ -421,6 +421,13 @@
 /processorParam:Quality=Best
 /build:storymsc.wav
 
+#begin text1.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:text1.spritefont
+
 #begin titlescreen.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
