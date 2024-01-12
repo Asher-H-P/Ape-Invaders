@@ -45,25 +45,22 @@ namespace Ape_Invaders
         Texture2D Z;
         Texture2D start2;
         Texture2D score2;
-        Texture2D story2;
         Texture2D spikeintro;
         Texture2D ape1;
         Texture2D ape2;
         Texture2D ape3;
         Rectangle play;
-        Rectangle story;
         Rectangle score;
         Rectangle spkintro;
         Rectangle apeintro1;
         Rectangle apeintro2;
         Rectangle apeintro3;
         Rectangle select1;
-        Rectangle select2;
         Rectangle select3;
         SoundEffect intromsc;
         SoundEffect scoremsc;
-        SoundEffect storymsc;
-        SoundEffect gamemsc;
+        SoundEffect lvlmsc1;
+        SoundEffect lvlmsc2;
         Screen screen;
         MouseState click;
         KeyboardState clack;
@@ -85,12 +82,10 @@ namespace Ape_Invaders
             // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 1000;
             _graphics.PreferredBackBufferHeight = 600;
-            play = new Rectangle(440, 400, 120, 40);
-            story = new Rectangle(440, 460, 120, 40);
-            score = new Rectangle(440, 520, 120, 40);
-            select1 = new Rectangle(400, 400, 120, 40);
-            select2 = new Rectangle(400, 460, 120, 40);
-            select3 = new Rectangle(400, 520, 120, 40);
+            play = new Rectangle(440, 420, 120, 40);
+            score = new Rectangle(440, 480, 120, 40);
+            select1 = new Rectangle(400, 420, 120, 40);
+            select3 = new Rectangle(400, 480, 120, 40);
             spkintro = new Rectangle(80, 10, 222, 285);
             apeintro1 = new Rectangle(600, 30, 150, 150);
             apeintro2 = new Rectangle(735, 30, 132, 222);
@@ -130,16 +125,14 @@ namespace Ape_Invaders
             Z = Content.Load<Texture2D>("AE-Z");
             start2 = Content.Load<Texture2D>("start");
             score2 = Content.Load<Texture2D>("score");
-            story2 = Content.Load<Texture2D>("story");
             spikeintro = Content.Load<Texture2D>("spike_intro");
             ape1 = Content.Load<Texture2D>("ape_intro1");
             ape2 = Content.Load<Texture2D>("ape_intro2");
             ape3 = Content.Load<Texture2D>("ape_intro3");
             intromsc = Content.Load<SoundEffect>("titlescreen");
-            scoremsc = Content.Load<SoundEffect>("scoremsc");
-            storymsc = Content.Load<SoundEffect>("storymsc");
-            gamemsc = Content.Load<SoundEffect>("storymsc");
-            storytext = Content.Load<SpriteFont>("text1");
+            scoremsc = Content.Load<SoundEffect>("level2");
+            lvlmsc1 = Content.Load<SoundEffect>("level1");
+            lvlmsc2 = Content.Load<SoundEffect>("level2");
             // TODO: use this.Content to load your game content here
         }
 
@@ -154,19 +147,7 @@ namespace Ape_Invaders
             {
                 intromsc.Dispose();
             }
-            if (screen != Screen.Game)
-            {
-                gamemsc.Dispose();
-            }
-            if (screen != Screen.Story)
-            {
-                storymsc.Dispose();
-            }
-            if (screen != Screen.Score)
-            {
-                scoremsc.Dispose();
-            }
-            if (clack.IsKeyDown(Keys.Down) && select < 30)
+            if (clack.IsKeyDown(Keys.Down) && select < 20)
             {
                 select = select + 1;
             }
@@ -178,50 +159,38 @@ namespace Ape_Invaders
             {
 
                 screen = Screen.Game;
+                if (msc1 == 1)
+                {
+                    lvlmsc1.Play();
+                    msc1 = 0;
+                }
             }
             //music
-            else if (select >= 11 && select <= 20 && clack.IsKeyDown(Keys.E))
+            else if (select >= 11 && select <= 20 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
             {
-                if (msc2 == 0)
+                screen = Screen.Score;
+                if (msc1 == 1)
                 {
-                    screen = Screen.Story;
-                    storymsc.Play();
-                    msc2 = 1;
-                }
-            }
-            else if (select >= 21 && select <= 30 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
-            {
-                if (msc3 == 0)
-                {
-                    screen = Screen.Score;
                     scoremsc.Play();
-                    msc3 = 1;
-                }
-            }
-            if (screen == Screen.Story && clack.IsKeyDown(Keys.Q))
-            {
-                if (msc2 == 1)
-                {
                     msc1 = 0;
-                    screen = Screen.Intro;
-                    storymsc.Dispose();
-                    msc2 = 0;
                 }
             }
             else if (screen == Screen.Score && clack.IsKeyDown(Keys.Q))
             {
-                if (msc3 == 1)
+                screen = Screen.Intro;
+                select = 1;
+                if (select == 1)
                 {
-                    msc1 = 0;
-                    screen = Screen.Intro;
                     scoremsc.Dispose();
-                    msc3 = 0;
                 }
             }
             else if (screen == Screen.Intro)
             {
-                msc2 = 0;
-                msc3 = 0;
+                if (msc1 == 0)
+                {
+                    intromsc.Play();
+                    msc1 = 1;
+                }
             }
             //music
             base.Update(gameTime);
@@ -235,14 +204,7 @@ namespace Ape_Invaders
             _spriteBatch.Begin();
             if (screen == Screen.Intro)
             {
-                if (msc1 == 0)
-                {
-                    scoremsc.Dispose();
-                    storymsc.Dispose();
-                    gamemsc.Dispose();
-                    intromsc.Play();
-                    msc1 = 1;
-                }
+                scoremsc.Dispose();
                 _spriteBatch.Draw(A, new Vector2(400, 80), Color.White);
                 _spriteBatch.Draw(P, new Vector2(453, 80), Color.White);
                 _spriteBatch.Draw(E, new Vector2(515, 80), Color.White);
@@ -269,47 +231,22 @@ namespace Ape_Invaders
                 }
                 if (select >= 11 && select <= 20)
                 {
-                    _spriteBatch.Draw(story2, story, Color.DarkGray);
-                }
-                else if (select < 11 || select > 20)
-                {
-
-                    _spriteBatch.Draw(story2, story, Color.White);
-                }
-                if (select >= 21 && select <= 30)
-                {
                     _spriteBatch.Draw(score2, score, Color.DarkGray);
                 }
-                else if (select < 21)
+                else if (select < 11)
                 {
-
                     _spriteBatch.Draw(score2, score, Color.White);
                 }
                 if (screen == Screen.Game)
                 {
                     intromsc.Dispose();
                 }
-                if (screen == Screen.Story)
-                {
-                    intromsc.Dispose();
-                    if (msc2 == 0)
-                    {
-                        storymsc.Play();
-                        msc2 = 1;
-                        msc1 = 0;
-                    }
-                    _spriteBatch.DrawString(storytext, "Apes have are travelling through time in order to rewrite history.", new Vector2(100, 100), Color.White);
-                    _spriteBatch.DrawString(storytext, "It's up to you to stop them. Use your slingshot to stop them.", new Vector2(100, 125), Color.White);
-                }
                 if (screen == Screen.Score)
                 {
-                    intromsc.Dispose();
-                    if (msc3 == 0)
-                    {
-                        scoremsc.Play();
-                        msc3 = 1;
-                        msc1 = 0;
-                    }
+                }
+                else if (screen != Screen.Score)
+                {
+                    scoremsc.Dispose();
                 }
             }
             _spriteBatch.End();

@@ -361,6 +361,18 @@
 /processorParam:TextureFormat=Color
 /build:ape_intro3.png
 
+#begin level1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:level1.wav
+
+#begin level2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:level2.wav
+
 #begin score.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -12,6 +12,15 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="Game.cs" />
+    <Compile Remove="Game.Designer.cs" />
+    <Compile Remove="lllll.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Game.resx" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Content\102 title screen.mp3" />
     <None Remove="Content\AE-A.png" />
     <None Remove="Content\AE-B.png" />
