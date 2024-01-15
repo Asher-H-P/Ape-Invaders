@@ -17,6 +17,7 @@ namespace Ape_Invaders
         }
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        Player Spike;
         Texture2D A;
         Texture2D B;
         Texture2D C;
@@ -240,6 +241,7 @@ namespace Ape_Invaders
                 if (screen == Screen.Game)
                 {
                     intromsc.Dispose();
+
                 }
                 if (screen == Screen.Score)
                 {
