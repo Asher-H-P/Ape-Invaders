@@ -17,7 +17,7 @@ namespace Ape_Invaders
         }
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        Player Spike;
+        Player spike;
         Texture2D A;
         Texture2D B;
         Texture2D C;
@@ -50,6 +50,12 @@ namespace Ape_Invaders
         Texture2D ape1;
         Texture2D ape2;
         Texture2D ape3;
+        Texture2D spikeplay;
+        Texture2D blackape;
+        Texture2D blueape;
+        Texture2D greenape;
+        Texture2D redape;
+        Texture2D yellowape;
         Rectangle play;
         Rectangle score;
         Rectangle spkintro;
@@ -65,7 +71,6 @@ namespace Ape_Invaders
         Screen screen;
         MouseState click;
         KeyboardState clack;
-        private SpriteFont storytext;
         int msc1 = 0;
         int msc2 = 0;
         int msc3 = 0;
@@ -93,6 +98,7 @@ namespace Ape_Invaders
             apeintro3 = new Rectangle(825, 30, 230, 252);
             _graphics.ApplyChanges();
             base.Initialize();
+            spike = new Player(spikeplay, 100, 100);
         }
 
         protected override void LoadContent()
@@ -130,6 +136,12 @@ namespace Ape_Invaders
             ape1 = Content.Load<Texture2D>("ape_intro1");
             ape2 = Content.Load<Texture2D>("ape_intro2");
             ape3 = Content.Load<Texture2D>("ape_intro3");
+            spikeplay = Content.Load<Texture2D>("spike");
+            blackape = Content.Load<Texture2D>("black_ape");
+            blueape = Content.Load<Texture2D>("blue_ape");
+            greenape = Content.Load<Texture2D>("green_ape");
+            redape = Content.Load<Texture2D>("red_ape");
+            yellowape = Content.Load<Texture2D>("yellow_ape");
             intromsc = Content.Load<SoundEffect>("titlescreen");
             scoremsc = Content.Load<SoundEffect>("level2");
             lvlmsc1 = Content.Load<SoundEffect>("level1");
@@ -144,11 +156,22 @@ namespace Ape_Invaders
             click = Mouse.GetState();
             clack = Keyboard.GetState();
             // TODO: Add your update logic here
+            spike.HSpeed = 0;
+            spike.VSpeed = 0;
+            if (clack.IsKeyDown(Keys.D))
+                spike.HSpeed = 3;
+            else if (clack.IsKeyDown(Keys.A))
+                spike.HSpeed = -3;
+            if (clack.IsKeyDown(Keys.W))
+                spike.VSpeed = -3;
+            else if (clack.IsKeyDown(Keys.S))
+                spike.VSpeed = 3;
+            spike.Update();
             if (screen != Screen.Intro)
             {
                 intromsc.Dispose();
             }
-            if (clack.IsKeyDown(Keys.Down) && select < 20)
+            if (clack.IsKeyDown(Keys.Down) && select < 2)
             {
                 select = select + 1;
             }
@@ -156,9 +179,8 @@ namespace Ape_Invaders
             {
                 select = select - 1;
             }
-            if (select >= 1 && select <= 10 && clack.IsKeyDown(Keys.E))
+            if (select == 1 && clack.IsKeyDown(Keys.E))
             {
-
                 screen = Screen.Game;
                 if (msc1 == 1)
                 {
@@ -167,7 +189,7 @@ namespace Ape_Invaders
                 }
             }
             //music
-            else if (select >= 11 && select <= 20 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
+            else if (select == 2 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
             {
                 screen = Screen.Score;
                 if (msc1 == 1)
@@ -221,27 +243,28 @@ namespace Ape_Invaders
                 _spriteBatch.Draw(ape1, apeintro1, Color.White);
                 _spriteBatch.Draw(ape2, apeintro2, Color.White);
                 _spriteBatch.Draw(ape3, apeintro3, Color.White);
-                if (select >= 1 && select <= 10)
+                if (select == 1)
                 {
                     _spriteBatch.Draw(start2, play, Color.DarkGray);
+                    _spriteBatch.Draw(score2, score, Color.White);
+                    if (clack.IsKeyDown(Keys.E))
+                    {
+                        screen = Screen.Game;
+                        spike.Draw(_spriteBatch);
+                    }
                 }
-                else if (select > 10)
-                {
-
-                    _spriteBatch.Draw(start2, play, Color.White);
-                }
-                if (select >= 11 && select <= 20)
+                else if (select == 2)
                 {
                     _spriteBatch.Draw(score2, score, Color.DarkGray);
-                }
-                else if (select < 11)
-                {
-                    _spriteBatch.Draw(score2, score, Color.White);
+                    _spriteBatch.Draw(start2, play, Color.White);
+                    if (clack.IsKeyDown(Keys.E))
+                    {
+                        screen = Screen.Score;
+                    }
                 }
                 if (screen == Screen.Game)
                 {
                     intromsc.Dispose();
-
                 }
                 if (screen == Screen.Score)
                 {
