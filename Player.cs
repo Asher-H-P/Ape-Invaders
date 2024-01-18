@@ -13,7 +13,7 @@ namespace Ape_Invaders
         public Player(Texture2D texture, int x, int y)
         {
             _texture = texture;
-            _location = new Rectangle(x, y, 40, 40);
+            _location = new Rectangle(x, y, 60, 60);
             _speed = new Vector2();
         }
         public float HSpeed
@@ -26,6 +26,10 @@ namespace Ape_Invaders
             get { return _speed.Y; }
             set { _speed.Y = value; }
         }
+
+        public int Left { get; internal set; }
+        public int Right { get; internal set; }
+
         private void Move()
         {
             _location.X += (int)_speed.X;
@@ -38,6 +42,15 @@ namespace Ape_Invaders
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _location, Color.White);
+        }
+        public bool Collide(Rectangle item)
+        {
+            return _location.Intersects(item);
+        }
+        public void UndoMove()
+        {
+            _location.X -= (int)_speed.X;
+            _location.Y -= (int)_speed.Y;
         }
     }
 }
