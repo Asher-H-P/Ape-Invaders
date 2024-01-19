@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../Downloads/level3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../../../Downloads/level3.wav;level3.wav
+
 #begin AE-A.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -409,6 +415,12 @@
 /processorParam:Quality=Best
 /build:level2.wav
 
+#begin level4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:level4.wav
+
 #begin red_ape.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -462,6 +474,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spike.png
+
+#begin starborn.zip
+/importer:
+/processor:
+/build:starborn.zip
 
 #begin start.png
 /importer:TextureImporter

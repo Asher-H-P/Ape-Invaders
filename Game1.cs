@@ -70,10 +70,19 @@ namespace Ape_Invaders
         Rectangle apeintro3;
         Rectangle select1;
         Rectangle select3;
+        Rectangle spikes;
+        Rectangle scores1;
+        Rectangle scores2;
+        Rectangle scores3;
+        Rectangle scores4;
+        Rectangle scores5;
         SoundEffect intromsc;
         SoundEffect scoremsc;
         SoundEffect lvlmsc1;
         SoundEffect lvlmsc2;
+        SoundEffect lvlmsc3;
+        SoundEffect lvlmsc4;
+        private SpriteFont words;
         Screen screen;
         MouseState click;
         KeyboardState clack;
@@ -89,12 +98,35 @@ namespace Ape_Invaders
         int apecolour3 = 1;
         int apecolour4 = 1;
         int apecolour5 = 1;
+        int scorenum1 = 600;
+        int scorenum2 = 500;
+        int scorenum3 = 400;
+        int scorenum4 = 300;
+        int scorenum5 = 200;
+
+
+
+
+
+
+
+
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
+
+
+
+
+
+
+
+
+
 
         protected override void Initialize()
         {
@@ -117,6 +149,17 @@ namespace Ape_Invaders
             spike = new Player(spikeplay, 470, 530);
             apes11 = new Apenum1(yellowape, 475, 100);
         }
+
+
+
+
+
+
+
+
+
+
+
 
         protected override void LoadContent()
         {
@@ -163,8 +206,22 @@ namespace Ape_Invaders
             scoremsc = Content.Load<SoundEffect>("level2");
             lvlmsc1 = Content.Load<SoundEffect>("level1");
             lvlmsc2 = Content.Load<SoundEffect>("level2");
+            lvlmsc3 = Content.Load<SoundEffect>("level3");
+            lvlmsc4 = Content.Load<SoundEffect>("level4");
+            words = Content.Load<SpriteFont>("text1");
             // TODO: use this.Content to load your game content here
         }
+
+
+
+
+
+
+
+
+
+
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -217,7 +274,6 @@ namespace Ape_Invaders
                 }
                 playing = 1;
             }
-            //music
             else if (select == 2 && clack.IsKeyDown(Keys.E) || screen == Screen.Losing && clack.IsKeyDown(Keys.Q))
             {
                 screen = Screen.Score;
@@ -238,19 +294,47 @@ namespace Ape_Invaders
             }
             if (screen == Screen.Game)
             {
-                
+                _graphics.PreferredBackBufferWidth = 1000;
+                _graphics.PreferredBackBufferHeight = 600;
+                _graphics.ApplyChanges();
+                if (msc1 == 1)
+                {
+                    lvlmsc1.Play();
+                    msc1 = 2;
+                }
+            }
+            else if (screen == Screen.Score)
+            {
+                _graphics.PreferredBackBufferWidth = 500;
+                _graphics.PreferredBackBufferHeight = 800;
+                _graphics.ApplyChanges();
             }
             else if (screen == Screen.Intro)
             {
+                _graphics.PreferredBackBufferWidth = 1000;
+                _graphics.PreferredBackBufferHeight = 600;
+                _graphics.ApplyChanges();
                 if (msc1 == 0)
                 {
                     intromsc.Play();
                     msc1 = 1;
                 }
             }
-            //music
             base.Update(gameTime);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -282,14 +366,9 @@ namespace Ape_Invaders
                     _spriteBatch.Draw(score2, score, Color.White);
                     if (clack.IsKeyDown(Keys.E))
                     {
-                        playing = 1;
                         intromsc.Dispose();
+                        screen = Screen.Game;
                     }
-                }
-                if (playing == 1)
-                {
-                    spike.Draw(_spriteBatch);
-                    apes11.Draw(_spriteBatch);
                 }
                 else if (select == 2)
                 {
@@ -300,20 +379,57 @@ namespace Ape_Invaders
                         screen = Screen.Score;
                     }
                 }
-                while (screen == Screen.Game)
+            }
+            else if (screen == Screen.Game)
+            {
+                spike.Draw(_spriteBatch);
+                apes11.Draw(_spriteBatch);
+            }
+            else if (screen == Screen.Score)
+            {
+                GraphicsDevice.Clear(Color.Green);
+                _spriteBatch.DrawString(words, "SCORES", new Vector2(97, 63), Color.Black);
+                _spriteBatch.DrawString(words, "SCORES", new Vector2(100, 60), Color.Yellow);
+                _spriteBatch.DrawString(words, "#1", new Vector2(97, 153), Color.Black);
+                _spriteBatch.DrawString(words, "#1", new Vector2(100, 150), Color.Yellow);
+                _spriteBatch.DrawString(words, "#2", new Vector2(97, 253), Color.Black);
+                _spriteBatch.DrawString(words, "#2", new Vector2(100, 250), Color.Yellow);
+                _spriteBatch.DrawString(words, "#3", new Vector2(97, 353), Color.Black);
+                _spriteBatch.DrawString(words, "#3", new Vector2(100, 350), Color.Yellow);
+                _spriteBatch.DrawString(words, "#4", new Vector2(97, 453), Color.Black);
+                _spriteBatch.DrawString(words, "#4", new Vector2(100, 450), Color.Yellow);
+                _spriteBatch.DrawString(words, "#5", new Vector2(97, 553), Color.Black);
+                _spriteBatch.DrawString(words, "#5", new Vector2(100, 550), Color.Yellow);
+                if (scores >= scorenum1)
                 {
-                    intromsc.Dispose();
-                    if (playing == 1)
-                    {
-                        spike.Draw(_spriteBatch);
-                    }
+                    _spriteBatch.DrawString(words, $"{scores}", new Vector2(237, 153), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum1}", new Vector2(237, 253), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum2}", new Vector2(237, 353), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum3}", new Vector2(237, 453), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum4}", new Vector2(237, 553), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scores}", new Vector2(240, 150), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum1}", new Vector2(240, 250), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum2}", new Vector2(240, 350), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum3}", new Vector2(240, 450), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum4}", new Vector2(240, 550), Color.Yellow);
+                    scorenum5 = scorenum4;
+                    scorenum4 = scorenum3;
+                    scorenum3 = scorenum2;
+                    scorenum2 = scorenum1;
+                    scorenum1 = scores;
                 }
-                if (screen == Screen.Score)
+                else if (scores <= scorenum5)
                 {
-                }
-                else if (screen != Screen.Score)
-                {
-                    scoremsc.Dispose();
+                    _spriteBatch.DrawString(words, $"{scorenum1}", new Vector2(237, 153), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum2}", new Vector2(237, 253), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum3}", new Vector2(237, 353), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum4}", new Vector2(237, 453), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum5}", new Vector2(237, 553), Color.Black);
+                    _spriteBatch.DrawString(words, $"{scorenum1}", new Vector2(240, 150), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum2}", new Vector2(240, 250), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum3}", new Vector2(240, 350), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum4}", new Vector2(240, 450), Color.Yellow);
+                    _spriteBatch.DrawString(words, $"{scorenum5}", new Vector2(240, 550), Color.Yellow);
                 }
             }
             _spriteBatch.End();
