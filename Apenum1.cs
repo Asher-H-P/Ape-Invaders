@@ -16,12 +16,12 @@ namespace Ape_Invaders
             _location1 = new Rectangle(x, y, 50, 50);
             _speed1 = new Vector2();
         }
-        public float HSpeed
+        public float HSpeed1
         {
             get { return _speed1.X; }
             set { _speed1.X = value; }
         }
-        public float VSpeed
+        public float VSpeed1
         {
             get { return _speed1.Y; }
             set { _speed1.Y = value; }
