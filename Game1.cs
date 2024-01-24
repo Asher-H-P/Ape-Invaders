@@ -25,7 +25,6 @@ namespace Ape_Invaders
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Player spike;
-        Projectile sprjctl, aprjctl;
         List<Rectangle> borders;
         Texture2D A;
         Texture2D B;
@@ -87,7 +86,9 @@ namespace Ape_Invaders
         Rectangle apes5;
         Rectangle borders1;
         Rectangle borders2;
-        Rectangle spikeprjctl;
+        Rectangle borders3;
+        Rectangle sprjctl;
+        Rectangle aprjctl;
         SoundEffect intromsc;
         SoundEffect scoremsc;
         SoundEffect lvlmsc1;
@@ -99,6 +100,8 @@ namespace Ape_Invaders
         Vector2 apeMove3;
         Vector2 apeMove4;
         Vector2 apeMove5;
+        Vector2 sprjctlM;
+        Vector2 aprjctlM;
         private SpriteFont words;
         Screen screen;
         MouseState click;
@@ -164,20 +167,24 @@ namespace Ape_Invaders
             borders.Add(new Rectangle(-2, -2, 1004, 1));
             borders1 = new Rectangle(-2, -50, 1, 700);
             borders2 = new Rectangle(1001, -50, 1, 700);
+            borders3 = new Rectangle(-2, -2, 1004, 1);
             apes1 = new Rectangle(475, 50, 50, 50);
             apes2 = new Rectangle(475, 110, 50, 50);
             apes3 = new Rectangle(475, 170, 50, 50);
             apes4 = new Rectangle(475, 230, 50, 50);
             apes5 = new Rectangle(475, 290, 50, 50);
+            sprjctl = new Rectangle(495, 535, 10, 10);
+            aprjctl = new Rectangle(495, 285, 10, 10);
             apeMove1 = new Vector2(6, 0);
             apeMove2 = new Vector2(4, 0);
             apeMove3 = new Vector2(-3, 0);
             apeMove4 = new Vector2(-4, 0);
             apeMove5 = new Vector2(3, 0);
+            sprjctlM = new Vector2(0, 0);
+            aprjctlM = new Vector2(0, 0);
             _graphics.ApplyChanges();
             base.Initialize();
             spike = new Player(spikeplay, 470, 530);
-            sprjctl = new Projectile(projectile, 10, 10);
         }
 
 
@@ -281,7 +288,7 @@ namespace Ape_Invaders
                 {
                     intromsc.Dispose();
                     lvlmsc1.Play();
-                    msc1 = 2;
+                    msc1 = 3;
                 }
                 playing = 1;
             }
@@ -297,6 +304,7 @@ namespace Ape_Invaders
             else if (screen == Screen.Score && clack.IsKeyDown(Keys.Q))
             {
                 screen = Screen.Intro;
+                scoremsc.Dispose();
                 select = 1;
                 if (select == 1)
                 {
@@ -319,19 +327,49 @@ namespace Ape_Invaders
                 else if (clack.IsKeyDown(Keys.A))
                     spike.HSpeed = -3;
                 spike.Update();
-                if (clack.IsKeyDown(Keys.D))
-                    sprjctl.HSpeed = 3;
-                else if (clack.IsKeyDown(Keys.A))
-                    sprjctl.HSpeed = -3;
-                if (clack.IsKeyDown(Keys.W))
+
+                sprjctl.X += (int)sprjctlM.X;
+                sprjctl.Y += (int)sprjctlM.Y;
+
+                if (clack.IsKeyUp(Keys.D) && clack.IsKeyUp(Keys.A))
                 {
-                    sprjctl.VSpeed = -5;
+                    sprjctlM.X = 0;
                 }
-                sprjctl.Update();
+                else if (clack.IsKeyDown(Keys.A) && clack.IsKeyDown(Keys.D))
+                {
+                    sprjctlM.X = 3;
+                }
+                if (clack.IsKeyDown(Keys.S))
+                {
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(redape, borders3, Color.Green);
+                    sprjctlM.Y = -5;
+                    sprjctlM.X = 0;
+                    if (sprjctl.Intersects(borders3))
+                    {
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(projectile, sprjctl, Color.LightBlue);
+                    }
+                    _spriteBatch.End();
+                }
+                if (clack.IsKeyDown(Keys.D))
+                {
+                    sprjctlM.X = 3;
+                }
+                if (clack.IsKeyDown(Keys.A))
+                {
+                    sprjctlM.X = -3;
+                }
+                
+                if (sprjctl.Intersects(borders1) || sprjctl.Intersects(borders2))
+                {
+                    sprjctlM.X = 1;
+                }
                 foreach (Rectangle barrier in borders)
                     if (spike.Collide(barrier))
                     {
                         spike.UndoMove();
+                        sprjctlM.X = 0;
                     }
                 apes1.X += (int)apeMove1.X;
                 apes2.X += (int)apeMove2.X;
@@ -358,8 +396,33 @@ namespace Ape_Invaders
                 {
                     apeMove5 *= -1;
                 }
+                if (apes1.Intersects(sprjctl))
+                {
+                    apes1 = new Rectangle(-50, -50, 1, 1);
+                    apeMove1 = new Vector2(0, 0);
+                }
+                if (apes2.Intersects(sprjctl))
+                {
+                    apes2 = new Rectangle(-50, -50, 1, 1);
+                    apeMove2 = new Vector2(0, 0);
+                }
+                if (apes3.Intersects(sprjctl))
+                {
+                    apes3 = new Rectangle(-50, -50, 1, 1);
+                    apeMove3 = new Vector2(0, 0);
+                }
+                if (apes4.Intersects(sprjctl))
+                {
+                    apes4 = new Rectangle(-50, -50, 1, 1);
+                    apeMove4 = new Vector2(0, 0);
+                }
+                if (apes5.Intersects(sprjctl))
+                {
+                    apes5 = new Rectangle(-50, -50, 1, 1);
+                    apeMove5 = new Vector2(0, 0);
+                }
             }
-            if (screen == Screen.Game2)
+            else if (screen == Screen.Game2)
             {
                 if (msc1 == 2)
                 {
@@ -372,29 +435,50 @@ namespace Ape_Invaders
                 if (clack.IsKeyDown(Keys.D))
                 {
                     spike.HSpeed = 3;
-                    sprjctl.HSpeed = 3;
                 }
                 else if (clack.IsKeyDown(Keys.A))
                 {
                     spike.HSpeed = -3;
-                    sprjctl.HSpeed = -3;
                 }
                 spike.Update();
+
+                sprjctl.X += (int)sprjctlM.X;
+
+                if (clack.IsKeyUp(Keys.D) && clack.IsKeyUp(Keys.A))
+                {
+                    sprjctlM.X = 0;
+                }
+                if (clack.IsKeyDown(Keys.S))
+                {
+                    sprjctlM.Y = -5;
+                    sprjctlM.X = 0;
+                }
+                if (clack.IsKeyDown(Keys.D))
+                {
+                    sprjctlM.X = 3;
+                }
+                if (clack.IsKeyDown(Keys.A))
+                {
+                    sprjctlM.X = -3;
+                }
                 foreach (Rectangle barrier in borders)
                     if (spike.Collide(barrier))
                     {
                         spike.UndoMove();
+                        sprjctlM.X = 0;
                     }
                 apeMove1 = new Vector2(-3, 0);
                 apeMove2 = new Vector2(4, 0);
                 apeMove3 = new Vector2(-4, 0);
-                apeMove4 = new Vector2(-6, 0);
+                apeMove4 = new Vector2(6, 0);
                 apeMove5 = new Vector2(-2, 0);
+                aprjctlM = new Vector2(-2, 0);
                 apes1.X += (int)apeMove1.X;
                 apes2.X += (int)apeMove2.X;
                 apes3.X += (int)apeMove3.X;
                 apes4.X += (int)apeMove4.X;
                 apes5.X += (int)apeMove5.X;
+                aprjctl.X += (int)aprjctlM.X;
                 if (apes1.Intersects(borders1) || apes1.Intersects(borders2))
                 {
                     apeMove1 *= -1;
@@ -414,6 +498,32 @@ namespace Ape_Invaders
                 if (apes5.Intersects(borders1) || apes5.Intersects(borders2))
                 {
                     apeMove5 *= -1;
+                    aprjctlM *= -1;
+                }
+                if (apes1.Intersects(sprjctl))
+                {
+                    apes1 = new Rectangle(-50, -50, 1, 1);
+                    apeMove1 = new Vector2(0, 0);
+                }
+                if (apes2.Intersects(sprjctl))
+                {
+                    apes2 = new Rectangle(-50, -50, 1, 1);
+                    apeMove2 = new Vector2(0, 0);
+                }
+                if (apes3.Intersects(sprjctl))
+                {
+                    apes3 = new Rectangle(-50, -50, 1, 1);
+                    apeMove3 = new Vector2(0, 0);
+                }
+                if (apes4.Intersects(sprjctl))
+                {
+                    apes4 = new Rectangle(-50, -50, 1, 1);
+                    apeMove4 = new Vector2(0, 0);
+                }
+                if (apes5.Intersects(sprjctl))
+                {
+                    apes5 = new Rectangle(-50, -50, 1, 1);
+                    apeMove5 = new Vector2(0, 0);
                 }
             }
             else if (screen == Screen.Score)
@@ -455,6 +565,9 @@ namespace Ape_Invaders
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
+
+
+            //intro
             if (screen == Screen.Intro)
             {
                 scoremsc.Dispose();
@@ -493,22 +606,32 @@ namespace Ape_Invaders
                     }
                 }
             }
+            //intro
+
+
+
+            //game1
             else if (screen == Screen.Game1)
             {
                 GraphicsDevice.Clear(Color.LimeGreen);
-                sprjctl.Draw(_spriteBatch);
+                _spriteBatch.Draw(projectile, sprjctl, Color.LightBlue);
                 spike.Draw(_spriteBatch);
                 _spriteBatch.Draw(blueape, apes1, Color.White);
                 _spriteBatch.Draw(yellowape, apes2, Color.White);
                 _spriteBatch.Draw(yellowape, apes3, Color.White);
                 _spriteBatch.Draw(yellowape, apes4, Color.White);
                 _spriteBatch.Draw(yellowape, apes5, Color.White);
-                if (scores == 200)
+                if (scores == 200 || scores == 600 || scores == 1000)
                 {
                     lvlmsc1.Dispose();
                     screen = Screen.Game2;
                 }
             }
+            //game1
+
+
+
+            //game2
             else if (screen == Screen.Game2)
             {
                 if (msc1 == 2)
@@ -517,14 +640,26 @@ namespace Ape_Invaders
                     msc1 = 3;
                 }
                 GraphicsDevice.Clear(Color.Salmon);
-                sprjctl.Draw(_spriteBatch);
+                _spriteBatch.Draw(projectile, sprjctl, Color.LightBlue);
                 spike.Draw(_spriteBatch);
+                _spriteBatch.Draw(redape, borders1, Color.Green);
+
                 _spriteBatch.Draw(yellowape, apes1, Color.White);
                 _spriteBatch.Draw(yellowape, apes2, Color.White);
                 _spriteBatch.Draw(yellowape, apes3, Color.White);
                 _spriteBatch.Draw(blueape, apes4, Color.White);
                 _spriteBatch.Draw(redape, apes5, Color.White);
+                if (scores == 400 || scores == 800 || scores == 1200)
+                {
+                    lvlmsc2.Dispose();
+                    screen = Screen.Game1;
+                }
             }
+            //game2
+
+
+
+            //score
             else if (screen == Screen.Score)
             {
                 GraphicsDevice.Clear(Color.Green);
@@ -572,6 +707,9 @@ namespace Ape_Invaders
                     _spriteBatch.DrawString(words, $"{scorenum5}", new Vector2(240, 550), Color.Yellow);
                 }
             }
+            //score
+
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
