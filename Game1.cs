@@ -485,7 +485,7 @@ namespace Ape_Invaders
                 _spriteBatch.Draw(R, new Vector2(606, 180), Color.White);
                 _spriteBatch.Draw(S, new Vector2(666, 180), Color.White);
                 _spriteBatch.Draw(spikeintro, spkintro, Color.White);
-                _spriteBatch.Draw(ape1, apeintro1, Color.White);
+                _spriteBatch.Draw(ape1, apeintro1, Color.White); 
                 _spriteBatch.Draw(ape2, apeintro2, Color.White);
                 _spriteBatch.Draw(ape3, apeintro3, Color.White);
                 if (select == 1)
